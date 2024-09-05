@@ -3,6 +3,7 @@
 import React from 'react';
 import { Form, Formik } from 'formik';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import Button from '@/app/components/button';
 import InputField from '@/app/components/input-field';
 import LogoUploader from '@/app/components/logo-uploader';
@@ -45,6 +46,8 @@ export default function CompanyForm({ onSubmit }: CompanyFormProps) {
     staleTime: 10 * 1000,
   });
 
+  console.log(categories);
+
   const { data: countries } = useQuery({
     queryKey: ['countries'],
     queryFn: getCountries,
@@ -64,9 +67,9 @@ export default function CompanyForm({ onSubmit }: CompanyFormProps) {
     await mutateAsync({
       ...values,
       categoryTitle:
-        categories.find(({ id }) => id === values.categoryId)?.title ?? '',
+        categories?.find(({ id }) => id === values.categoryId)?.title ?? '',
       countryTitle:
-        countries.find(({ id }) => id === values.countryId)?.title ?? '',
+        countries?.find(({ id }) => id === values.countryId)?.title ?? '',
     });
 
     if (onSubmit) {
