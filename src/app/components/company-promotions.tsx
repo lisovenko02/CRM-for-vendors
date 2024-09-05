@@ -3,7 +3,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getPromotions } from '../../../lib/api';
-import Promotion from './promotions';
+import Promotion from '../components/promotions';
 
 export interface CompanyPromotionsProps {
   companyId: string;

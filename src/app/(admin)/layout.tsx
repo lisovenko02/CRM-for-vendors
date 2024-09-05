@@ -4,7 +4,7 @@ import Sidebar from '../components/sidebar';
 export interface LayoutProps {
   children: React.ReactNode;
 }
-console.log('first');
+
 export default function Layout({ children }: LayoutProps) {
   return (
     <>

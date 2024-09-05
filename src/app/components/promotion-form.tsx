@@ -1,10 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+'use client';
+
 import React from 'react';
-import { createPromotion, getCompany, Promotion } from '../../../lib/api';
 import { Form, Formik } from 'formik';
-import LogoUploader from './logo-uploader';
-import InputField from './input-field';
-import Button from './button';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Button from '@/app/components/button';
+import InputField from '@/app/components/input-field';
+import LogoUploader from '@/app/components/logo-uploader';
+import { createPromotion, getCompany } from '../../../lib/api';
 
 export type PromotionFieldValues = {
   title: string;
@@ -17,6 +19,7 @@ const initialValues: PromotionFieldValues = {
   description: '',
   discount: '',
 };
+
 export interface PromotionFormProps {
   companyId: string;
   onSubmit?: (values: PromotionFieldValues) => void | Promise<void>;
@@ -37,26 +40,19 @@ export default function PromotionForm({
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: createPromotion,
-    onSuccess: (data) => {
-      queryClient.setQueryData<Promotion[]>(
-        ['promotions', companyId],
-        (oldData) => {
-          return (oldData ?? []).concat(data);
-        },
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['promotions', companyId],
+      });
 
-      queryClient.setQueryData<Promotion[]>(['promotions'], (oldData) => {
-        return (oldData ?? []).concat(data);
+      queryClient.invalidateQueries({
+        queryKey: ['promotions'],
+        exact: true,
       });
     },
   });
 
   const handleSubmit = async (values: PromotionFieldValues) => {
-    if (!company) {
-      console.error('Company data is not available');
-      return;
-    }
-
     await mutateAsync({
       ...values,
       discount: Number(values.discount) || 0,
@@ -88,11 +84,7 @@ export default function PromotionForm({
             placeholder="Discount"
             name="discount"
           />
-          <LogoUploader
-            square={true}
-            label="Image"
-            placeholder="Upload photo"
-          />
+          <LogoUploader square label="Image" placeholder="Upload photo" />
         </div>
         <Button type="submit" disabled={isPending}>
           Add promotion
