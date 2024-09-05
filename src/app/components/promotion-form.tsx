@@ -37,7 +37,7 @@ export default function PromotionForm({
     staleTime: 10 * 1000,
     enabled: Boolean(companyId),
   });
-
+  console.log(company);
   const { mutateAsync, isPending } = useMutation({
     mutationFn: createPromotion,
     onSuccess: () => {
@@ -56,8 +56,8 @@ export default function PromotionForm({
     await mutateAsync({
       ...values,
       discount: Number(values.discount) || 0,
-      companyId: company.id,
-      companyTitle: company.title,
+      companyId: company?.id,
+      companyTitle: company?.title,
     });
 
     if (onSubmit) {

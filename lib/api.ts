@@ -49,8 +49,8 @@ export interface Promotion {
   title: string;
   description: string;
   discount: number;
-  companyId: string;
-  companyTitle: string;
+  companyId?: string;
+  companyTitle?: string;
   avatar?: string;
 }
 
